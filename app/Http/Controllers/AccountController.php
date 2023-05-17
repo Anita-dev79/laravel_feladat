@@ -13,8 +13,12 @@ class AccountController extends Controller
      */
     public function index()
     {
-        $adminData = Account::all();
-        return view('customer_index',compact('adminData'));
+        try{
+            $adminData = Account::all();
+            return view('customer_index',compact('adminData'));
+        } catch (\Exception $e) {
+            echo 'Database connection problem. Please try again later.';
+        }
     }
 
     /**
@@ -30,15 +34,20 @@ class AccountController extends Controller
      */
     public function store(Request $request)
     {
-        $customer = new Account;
-        $customer->name = $request->name_i;
-        $customer->address = $request->address_i;
-        $customer->accountId = $request->customerId_i;
-        $customer->contractDate = $request->contractDate_i;
-        $customer->save();
+        try {
+            $customer = new Account;
+            $customer->name = $request->name_i;
+            $customer->address = $request->address_i;
+            $customer->accountId = $request->customerId_i;
+            $customer->contractDate = $request->contractDate_i;
+            $customer->save();
 
-        $adminData = Account::all();
-        return redirect()->route('account.index');
+            $adminData = Account::all();
+            return redirect()->route('account.index');
+        } catch (\Exception $e) {
+            echo 'Database connection problem. Please try again later.';
+            return redirect()->route('account.index');
+        }
     }
 
     /**
@@ -62,15 +71,19 @@ class AccountController extends Controller
      */
     public function update(Request $request)
     {
-        $customer = Account::find($request->id);
-        $customer->name = $request->name;
-        $customer->address = $request->address;
-        $customer->accountId = $request->customerId;
-        $customer->contractDate = $request->contractDate;
-        $customer->save();
+        try {
+            $customer = Account::find($request->id);
+            $customer->name = $request->name;
+            $customer->address = $request->address;
+            $customer->accountId = $request->customerId;
+            $customer->contractDate = $request->contractDate;
+            $customer->save();
 
-        $adminData = Account::all();
-        return redirect()->route('account.index');
+            $adminData = Account::all();
+            return redirect()->route('account.index');
+        } catch (\Exception $e) {
+            echo 'Database connection problem. Please try again later.';
+        }
     }
 
     /**
